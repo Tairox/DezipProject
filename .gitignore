@@ -1,2 +1,3 @@
 *.tgz
 sample.txt
+__pycache__/*
