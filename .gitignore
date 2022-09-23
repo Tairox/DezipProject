@@ -1,4 +1,3 @@
-*.tgz
-sample.txt
-Sample-SQL-File-10-Rows.sql
-__pycache__
+*
+!*.py
+!monfichierdiff.sql
