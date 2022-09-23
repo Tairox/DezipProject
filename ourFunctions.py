@@ -1,4 +1,4 @@
-import tarfile,os,filecmp
+import tarfile,os,logging
 
 def formatDate(daynumber : int, monthnumber : int, yearnumber : int) -> str :
     '''Takes in the number of the day,month and year and returns it in a AAAADDMM format'''
@@ -16,6 +16,6 @@ def tgzMyFile(filenameOfTgz : str,filenameOfSource : str):
     with tarfile.open(filenameOfTgz+".tgz","w:gz") as tar:
         tar.add(os.path.basename(filenameOfSource))
     if os.path.exists(filenameOfTgz+".tgz") :
-        print("L'archive .tgz avec le bon nom a bien été créé.")
+        logging.info("L'archive .tgz avec le bon nom a bien été créé")
     else :
-        print("Erreur : L'archive .tgz n'a pas pu être créé.")
+        logging.critical("L'archive .tgz n'a pas pu être créé")
