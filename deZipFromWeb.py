@@ -2,7 +2,7 @@ import requests,zipfile,io,filecmp,logging,os
 from datetime import date
 from ourFunctions import formatDate,tgzMyFile
 
-logging.basicConfig(filename='scriptStatus.log', format='%(asctime)s:%(levelname)s:%(message)s', encoding='utf-8',datefmt='%m/%d/%Y %I:%M:%S', level=logging.DEBUG)
+logging.basicConfig(filename='scriptStatus.log', format='%(asctime)s:%(levelname)s:%(message)s', encoding='utf-8',datefmt='%m/%d/%Y %H:%M:%S', level=logging.DEBUG)
 
 
 logging.info("Script started")
@@ -15,13 +15,14 @@ if r.ok:
     z = zipfile.ZipFile(io.BytesIO(r.content))
     try:
         z.extract(filename,".") # "filename" est le nom du fichier attendu dans le zip, il sera extrait dans le répertoire commun (.)
-        logging.info("Le fichier .zip contient bien le fichier attendu")
+        logging.info("L'archive ZIP contient bien le fichier attendu")
         os.rename(filename,finalDate+'.sql')
     except KeyError:
-        logging.critical("Le fichier .zip ne contient pas le fichier attendu")
+        logging.critical("L'archive ZIP ne contient pas le fichier attendu")
         exit() # arrête le programme
 else:
     logging.critical("L'URL de téléchargement n'existe pas")
+    exit()
 
 dayNumberMinus=today.day-1
 dateMinus=today.strftime('%Y'+str(dayNumberMinus)+'%m')
