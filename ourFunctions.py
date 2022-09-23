@@ -1,7 +1,8 @@
 import tarfile,os,logging
 
 def formatDate(daynumber : int, monthnumber : int, yearnumber : int) -> str :
-    '''Takes in the number of the day,month and year and returns it in a AAAADDMM format'''
+    '''Takes in the number of the day,month and year and returns it in a AAAADDMM format
+    REPLACED BY built-in function strftime() from datetime'''
     if monthnumber<10 :
         monthnumber="0"+str(monthnumber)
 
