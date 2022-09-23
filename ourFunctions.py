@@ -1,6 +1,6 @@
 import tarfile,os,filecmp
 
-def formatDate(daynumber : int ,monthnumber : int,yearnumber : int) -> str :
+def formatDate(daynumber : int, monthnumber : int, yearnumber : int) -> str :
     '''Takes in the number of the day,month and year and returns it in a AAAADDMM format'''
     if monthnumber<10 :
         monthnumber="0"+str(monthnumber)
