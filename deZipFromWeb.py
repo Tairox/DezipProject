@@ -2,7 +2,9 @@ import requests,zipfile,io,filecmp,logging
 from datetime import date
 from ourFunctions import formatDate,tgzMyFile
 
-logging.basicConfig(filename='scriptStatus.log', format='%(levelname)s:%(message)s', encoding='utf-8', level=logging.DEBUG)
+logging.basicConfig(filename='scriptStatus.log', format='%(asctime)s:%(levelname)s:%(message)s', encoding='utf-8',datefmt='%m/%d/%Y %I:%M:%S', level=logging.DEBUG)
+
+
 logging.info("Script started")
 filename="Sample-SQL-File-10-Rows.sql"
 r = requests.get("https://hdesousa.fr/downloads/Sample-SQL-File-10-Rows.sql.zip", stream=True)
@@ -19,12 +21,7 @@ else:
     logging.critical("L'URL de téléchargement n'existe pas")
 
 today=date.today()
-daynumber=today.day
-monthnumber=today.month
-yearnumber=today.year
-
-finalDate=formatDate(daynumber,monthnumber,yearnumber)
-
+finalDate=today.strftime("%Y%d%m") # finalDate est un string AAAADDMM
 tgzMyFile(finalDate,filename)
 
 try:
