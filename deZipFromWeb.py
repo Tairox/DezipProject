@@ -8,7 +8,7 @@ if r.ok:
     print("L'URL de téléchargement existe.")
     z = zipfile.ZipFile(io.BytesIO(r.content))
     try:
-        z.extract(filename,".") # sample.txt est le nom du fichier attendu dans le zip
+        z.extract(filename,".") # "filename" est le nom du fichier attendu dans le zip, il sera extrait dans le répertoire commun (.)
         print("Le fichier .zip contient bien le fichier attendu.")
     except KeyError:
         print("Le fichier .zip ne contient pas le fichier attendu")
