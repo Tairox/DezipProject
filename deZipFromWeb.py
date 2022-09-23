@@ -1,6 +1,7 @@
 import requests,zipfile,io,filecmp,logging,os
-from datetime import date
 from ourFunctions import formatDate,tgzMyFile
+from datetime import date
+from ftplib import FTP
 
 logging.basicConfig(filename='scriptStatus.log', format='%(asctime)s:%(levelname)s:%(message)s', encoding='utf-8',datefmt='%m/%d/%Y %H:%M:%S', level=logging.DEBUG)
 
@@ -36,6 +37,17 @@ try:
 except FileNotFoundError:
     logging.warning("Le fichier du jour précédent n'existe pas")
 
+username="cuwrmrb"
+password="7rVuiuFEBBQk9FPMyNesFMvFqk3GNg"
+server="ftp.cluster029.hosting.ovh.net"
+
+with FTP(server) as ftp:
+    ftp.login(username,password)
+    strdir='/ScriptingSystemS7'
+    ftp.cwd(strdir)
+    fileToTransfer=open(finalDate+'.tgz',"rb")
+    ftp.storbinary(f"STOR {finalDate+'.tgz'}",fileToTransfer,1024)
+    ftp.close()
 # à la fin du script on enlèvera le .sql du jour d'avant ainsi que l'archive tgz de celui du jour actuel car on en aura plus besoin
 
 logging.info("Script ended")
