@@ -1,3 +1,4 @@
+import ftplib
 import requests,zipfile,io,filecmp,logging,os
 from ourFunctions import formatDate,tgzMyFile
 from datetime import date
@@ -20,7 +21,7 @@ if r.ok:
         os.rename(filename,finalDate+'.sql')
     except KeyError:
         logging.critical("L'archive ZIP ne contient pas le fichier attendu")
-        exit() # arrête le programme
+        exit(1) # arrête le programme
 else:
     logging.critical("L'URL de téléchargement n'existe pas")
     exit()
@@ -42,12 +43,17 @@ password="7rVuiuFEBBQk9FPMyNesFMvFqk3GNg"
 server="ftp.cluster029.hosting.ovh.net"
 
 with FTP(server) as ftp:
-    ftp.login(username,password)
-    strdir='/ScriptingSystemS7'
-    ftp.cwd(strdir)
-    fileToTransfer=open(finalDate+'.tgz',"rb")
-    ftp.storbinary(f"STOR {finalDate+'.tgz'}",fileToTransfer,1024)
-    ftp.close()
+    try:
+        ftp.login(username,password)
+        strdir='/ScriptingSystemS7'
+        ftp.cwd(strdir)
+        fileToTransfer=open(finalDate+'.tgz',"rb")
+        ftp.storbinary(f"STOR {finalDate+'.tgz'}",fileToTransfer,1024)
+        ftp.close()
+    except ftplib.error_perm as e:
+        logging.critical("FTP : "+str(e))
+        exit(3)
+
 # à la fin du script on enlèvera le .sql du jour d'avant ainsi que l'archive tgz de celui du jour actuel car on en aura plus besoin
 
 logging.info("Script ended")
