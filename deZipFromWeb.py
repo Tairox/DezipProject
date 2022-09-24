@@ -39,7 +39,8 @@ except FileNotFoundError:
     logging.warning("Le fichier du jour précédent n'existe pas")
 
 username="cuwrmrb"
-password="7rVuiuFEBBQk9FPMyNesFMvFqk3GNg"
+passwordFile=(open("password.txt","r"))
+password=passwordFile.read()
 server="ftp.cluster029.hosting.ovh.net"
 
 with FTP(server) as ftp:
