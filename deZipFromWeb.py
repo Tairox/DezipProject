@@ -41,6 +41,7 @@ except FileNotFoundError:
 username="cuwrmrb"
 passwordFile=(open("password.txt","r"))
 password=passwordFile.read()
+passwordFile.close()
 server="ftp.cluster029.hosting.ovh.net"
 
 with FTP(server) as ftp:
