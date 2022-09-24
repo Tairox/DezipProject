@@ -12,7 +12,7 @@ def formatDate(daynumber : int, monthnumber : int, yearnumber : int) -> str :
     final_date=str(yearnumber)+str(daynumber)+str(monthnumber)
     return final_date
 
-def tgzMyFile(filenameOfTgz : str,filenameOfSource : str):
+def tgzMyFile(filenameOfTgz : str,filenameOfSource : str) -> None :
     '''Takes in the desired name of your .tgz file (without extension) and the filename (or path) of your source file, creates the archive in your current directory'''
     with tarfile.open(filenameOfTgz+".tgz","w:gz") as tar:
         tar.add(os.path.basename(filenameOfSource))
