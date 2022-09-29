@@ -79,6 +79,8 @@ for entry in sftp.listdir_attr(remotePath):
         filepath = remotePath + '/' + entry.filename
         sftp.get(filepath, os.path.join(localPath, entry.filename))  #os.path.join permet de mettre un / à la fin de local path s'il n'y en a pas
         sftp.remove(filepath)
+        logging.info("Le fichier "+entry.filename+" a été supprimé (fichier trop ancien).")
+logging.info("La recherche de fichiers obsolètes est terminée (+ de "+str(daysToDelete)+" jours).")
 
 # Close
 if sftp: sftp.close()
@@ -96,5 +98,5 @@ filesToDelete=[dateMinus,finalDate]
 for i in filesToDelete:
     os.remove(i+'.sql')
     os.remove(i+'.tgz')
-
+logging.info("Les fichiers locaux ont été supprimés.")
 logging.info("Script ended")
