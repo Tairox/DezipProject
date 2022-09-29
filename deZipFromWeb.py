@@ -94,8 +94,12 @@ if sftp: sftp.close()
 if transport: transport.close()
 
 # Sending emails :
+serverSMTP=data['SMTP']['server']
+senderEmail=data['SMTP']['senderEmail']
+senderPassword=data['SMTP']['password']
+senderPort=data['SMTP']['port']
 
-sendEmail("fise2.scripting.project@gmail.com", "etbk oxeo irst urkl", True, data)
+sendEmail(senderEmail, senderPassword, True, data)
 
 
 # à la fin du script on enlèvera le .sql du jour d'avant ainsi que l'archive tgz de celui du jour actuel car on en aura plus besoin
