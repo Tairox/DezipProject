@@ -41,7 +41,7 @@ def sendEmail(sender_email : int, password : int, issavegood : bool, data) -> No
         # Initializing the server connection
         yag = yagmail.SMTP(user= sender_email, password= password)
         # Sending the email
-        yag.send(to=[data['Email']['email1'], data['Email']['email2'], data['Email']['email3']], subject= header, contents=body, attachments='scriptStatus.log')
+        yag.send(to=[data['SMTP']['email1'], data['SMTP']['email2'], data['SMTP']['email3']], subject= header, contents=body, attachments='scriptStatus.log')
         logging.info("Email sent successfully")
     except Exception as e:
         logging.critical("The email has not been sent see the exception : " + e)

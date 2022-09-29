@@ -94,10 +94,8 @@ if sftp: sftp.close()
 if transport: transport.close()
 
 # Sending emails :
-serverSMTP=data['SMTP']['server']
 senderEmail=data['SMTP']['senderEmail']
 senderPassword=data['SMTP']['password']
-senderPort=data['SMTP']['port']
 
 sendEmail(senderEmail, senderPassword, True, data)
 
