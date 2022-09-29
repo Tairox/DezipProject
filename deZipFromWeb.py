@@ -1,9 +1,9 @@
 import requests,zipfile,io,filecmp,logging,os,paramiko
-from ourFunctions import formatDate,tgzMyFile
+from ourFunctions import formatDate,tgzMyFile, sendEmail
 from datetime import date, timedelta, datetime
 from ftplib import FTP
 
-logging.basicConfig(filename='scriptStatus.log', format='%(asctime)s:%(levelname)s:%(message)s', encoding='utf-8',datefmt='%m/%d/%Y %H:%M:%S', level=logging.DEBUG)
+logging.basicConfig(filename='scriptStatus.log', format='%(asctime)s:%(levelname)s:%(message)s', encoding='utf-8',datefmt='%m/%d/%Y %H:%M:%S', level=logging.INFO)
 
 
 logging.info("Script started")
@@ -89,6 +89,12 @@ for entry in sftp.listdir_attr(remotePath):
 # Close
 if sftp: sftp.close()
 if transport: transport.close()
+
+# Sending emails :
+
+sendEmail("smtp.gmail.com", 587, "fise2.scripting.project@gmail.com", "etbk oxeo irst urkl")
+
+
 
 
 # à la fin du script on enlèvera le .sql du jour d'avant ainsi que l'archive tgz de celui du jour actuel car on en aura plus besoin

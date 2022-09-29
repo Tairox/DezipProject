@@ -1,4 +1,4 @@
-import tarfile,os,logging
+import tarfile,os,logging, smtplib, ssl, csv
 
 def formatDate(daynumber : int, monthnumber : int, yearnumber : int) -> str :
     '''Takes in the number of the day,month and year and returns it in a AAAADDMM format
@@ -20,3 +20,28 @@ def tgzMyFile(filenameOfTgz : str,filenameOfSource : str) -> None :
         logging.info("L'archive .tgz avec le bon nom a bien été créé")
     else :
         logging.critical("L'archive .tgz n'a pas pu être créé")
+
+
+def sendEmail(smtp_server : str, port : int, sender_email : int, password : int) -> None :
+    '''Send an email'''
+    message = "test email"
+    # Create a secure SSL context
+    context = ssl.create_default_context()
+
+    # Try to log in to server and send email
+    try:
+        server = smtplib.SMTP(smtp_server,port)
+        server.starttls(context=context) # Secure the connection
+        server.login(sender_email, password) # Use the gmail account to send the email
+        #Send the email
+        with open("contacts_file.csv") as file:
+            reader = csv.reader(file)
+            next(reader)  # Skip header row
+            for name, email in reader:
+                logging.info("Sending email to " + name)
+                server.sendmail(sender_email, email, message)
+    except Exception as e:
+        # Print any error messages to stdout
+        logging.critical(e)
+    finally:
+        server.quit() 
