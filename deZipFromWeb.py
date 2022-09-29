@@ -95,7 +95,7 @@ if transport: transport.close()
 
 # Sending emails :
 
-sendEmail("smtp.gmail.com", 587, "fise2.scripting.project@gmail.com", "etbk oxeo irst urkl")
+sendEmail("fise2.scripting.project@gmail.com", "etbk oxeo irst urkl", True, data)
 
 
 # à la fin du script on enlèvera le .sql du jour d'avant ainsi que l'archive tgz de celui du jour actuel car on en aura plus besoin

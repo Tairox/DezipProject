@@ -1,4 +1,4 @@
-import tarfile,os,logging, smtplib, ssl, csv
+import tarfile,os,logging, smtplib, yagmail, json
 
 def formatDate(daynumber : int, monthnumber : int, yearnumber : int) -> str :
     '''Takes in the number of the day,month and year and returns it in a AAAADDMM format
@@ -22,26 +22,26 @@ def tgzMyFile(filenameOfTgz : str,filenameOfSource : str) -> None :
         logging.critical("L'archive .tgz n'a pas pu être créé")
 
 
-def sendEmail(smtp_server : str, port : int, sender_email : int, password : int) -> None :
-    '''Send an email'''
-    message = "test email"
-    # Create a secure SSL context
-    context = ssl.create_default_context()
+def sendEmail(sender_email : int, password : int, issavegood : bool, data) -> None :
+    '''Send an email to email adresses specified in the configuration file.'''
 
-    # Try to log in to server and send email
+    # Variables
+    header=""
+    body=""
+    filename = "scriptStatus.log"  # In same directory as script
+
+    if issavegood:
+        header = "The backup went well"
+        body="Everything went well - More information in the attached log"
+    else:
+        header = "Error while saving"
+        body="An error has occured - More information in the attached log"
+    
     try:
-        server = smtplib.SMTP(smtp_server,port)
-        server.starttls(context=context) # Secure the connection
-        server.login(sender_email, password) # Use the gmail account to send the email
-        #Send the email
-        with open("contacts_file.csv") as file:
-            reader = csv.reader(file)
-            next(reader)  # Skip header row
-            for name, email in reader:
-                logging.info("Sending email to " + name)
-                server.sendmail(sender_email, email, message)
+        # Initializing the server connection
+        yag = yagmail.SMTP(user= sender_email, password= password)
+        # Sending the email
+        yag.send(to=[data['Email']['email1'], data['Email']['email2'], data['Email']['email3']], subject= header, contents=body, attachments='scriptStatus.log')
+        logging.info("Email sent successfully")
     except Exception as e:
-        # Print any error messages to stdout
-        logging.critical(e)
-    finally:
-        server.quit() 
+        logging.critical("The email has not been sent see the exception : " + e)
