@@ -1,17 +1,19 @@
-import requests,zipfile,io,filecmp,logging,os,paramiko
+import requests,zipfile,io,filecmp,logging,os,paramiko,json
 from ourFunctions import formatDate,tgzMyFile, sendEmail
 from datetime import date, timedelta, datetime
 from ftplib import FTP
 
 logging.basicConfig(filename='scriptStatus.log', format='%(asctime)s:%(levelname)s:%(message)s', encoding='utf-8',datefmt='%m/%d/%Y %H:%M:%S', level=logging.INFO)
 
+with open("databaseconfig.json") as json_data_file:
+    data = json.load(json_data_file)
 
 logging.info("Script started")
-filename="Sample-SQL-File-10-Rows.sql"
+filename=data['FileRequest']['filename']
 today=date.today()
 finalDate=today.strftime("%Y%d%m") # finalDate est un string AAAADDMM
 
-URLtoRequest="https://hdesousa.fr/downloads/Sample-SQL-File-10-Rows.sql.zip"
+URLtoRequest=data['FileRequest']['URLtoRequest']
 
 r = requests.get(URLtoRequest, stream=True)
 if r.ok:
@@ -24,6 +26,9 @@ if r.ok:
     except KeyError:
         logging.critical("L'archive ZIP ne contient pas le fichier attendu")
         exit(1) # arrête le programme
+    except FileExistsError :
+        os.remove(finalDate+'.sql')
+        os.rename(filename,finalDate+'.sql')
 else:
     logging.critical("L'URL de téléchargement n'existe pas")
     exit()
@@ -40,11 +45,9 @@ try:
 except FileNotFoundError:
     logging.warning("Le fichier du jour précédent n'existe pas")
 
-username="cuwrmrb"
-passwordFile=(open("password.txt","r"))
-password=passwordFile.read()
-passwordFile.close()
-server="ftp.cluster029.hosting.ovh.net"
+username=data['SFTP']['username']
+password=data['SFTP']['password']
+server=data['SFTP']['server']
 
 '''with FTP(server) as ftp:
     try:
@@ -58,7 +61,7 @@ server="ftp.cluster029.hosting.ovh.net"
         logging.critical("FTP : "+str(e))
         exit(3)
         '''
-port=22 #port SFTP
+port=data['SFTP']['port'] #port SFTP
 transport = paramiko.Transport((server,port))
 
 # Auth
@@ -67,8 +70,8 @@ transport.connect(None,username,password) # None est la Hostkey
 # Go!    
 sftp = paramiko.SFTPClient.from_transport(transport)
 
-remotePath="/home/cuwrmrb/ScriptingSystemS7/"
-localPath="."
+remotePath=data['SFTP']['remotePath']
+localPath=data['SFTP']['localPath']
 
 # Upload : remotepath en chemin absolu ou alors sftp.chdir(dossier) puis chemin relatif à ce dossier
 sftp.put(localpath=finalDate+".tgz",remotepath=os.path.join(remotePath,finalDate+".tgz"))
@@ -89,10 +92,6 @@ for entry in sftp.listdir_attr(remotePath):
 # Close
 if sftp: sftp.close()
 if transport: transport.close()
-
-# Sending emails :
-
-sendEmail("smtp.gmail.com", 587, "fise2.scripting.project@gmail.com", "etbk oxeo irst urkl")
 
 
 
