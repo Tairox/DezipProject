@@ -9,11 +9,11 @@ with open("databaseconfig.json") as json_data_file:
     data = json.load(json_data_file)
 
 logging.info("Script started")
-filename=data['filename']
+filename=data['FileRequest']['filename']
 today=date.today()
 finalDate=today.strftime("%Y%d%m") # finalDate est un string AAAADDMM
 
-URLtoRequest=data['URLtoRequest']
+URLtoRequest=data['FileRequest']['URLtoRequest']
 
 r = requests.get(URLtoRequest, stream=True)
 if r.ok:
@@ -42,9 +42,9 @@ try:
 except FileNotFoundError:
     logging.warning("Le fichier du jour précédent n'existe pas")
 
-username=data['username']
-password=data['password']
-server=data['server']
+username=data['SFTP']['username']
+password=data['SFTP']['password']
+server=data['SFTP']['server']
 
 '''with FTP(server) as ftp:
     try:
@@ -58,7 +58,7 @@ server=data['server']
         logging.critical("FTP : "+str(e))
         exit(3)
         '''
-port=data['port'] #port SFTP
+port=data['SFTP']['port'] #port SFTP
 transport = paramiko.Transport((server,port))
 
 # Auth
@@ -67,8 +67,8 @@ transport.connect(None,username,password) # None est la Hostkey
 # Go!    
 sftp = paramiko.SFTPClient.from_transport(transport)
 
-remotePath=data['remotePath']
-localPath=data['localPath']
+remotePath=data['SFTP']['remotePath']
+localPath=data['SFTP']['localPath']
 
 # Upload : remotepath en chemin absolu ou alors sftp.chdir(dossier) puis chemin relatif à ce dossier
 sftp.put(localpath=finalDate+".tgz",remotepath=os.path.join(remotePath,finalDate+".tgz"))
