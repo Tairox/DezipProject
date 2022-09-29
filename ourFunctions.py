@@ -21,6 +21,15 @@ def tgzMyFile(filenameOfTgz : str,filenameOfSource : str) -> None :
     else :
         logging.critical("L'archive .tgz n'a pas pu être créé")
 
+def unTgzMyFile(filenameSource : str) -> None :
+    '''Takes in the tgz file and desired unpacked filename and unpack it'''
+    try:
+        with tarfile.open(filenameSource+'zizi') as tar:
+            tar.extractall()
+            tar.close()
+    except Exception as e:
+        logging.error(str(e))
+
 
 def sendEmail(sender_email : int, password : int, issavegood : bool, data) -> None :
     '''Send an email to email adresses specified in the configuration file.'''
