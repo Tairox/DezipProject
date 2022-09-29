@@ -26,6 +26,9 @@ if r.ok:
     except KeyError:
         logging.critical("L'archive ZIP ne contient pas le fichier attendu")
         exit(1) # arrête le programme
+    except FileExistsError :
+        os.remove(finalDate+'.sql')
+        os.rename(filename,finalDate+'.sql')
 else:
     logging.critical("L'URL de téléchargement n'existe pas")
     exit()
