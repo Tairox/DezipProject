@@ -24,7 +24,7 @@ def tgzMyFile(filenameOfTgz : str,filenameOfSource : str) -> None :
 def unTgzMyFile(filenameSource : str) -> None :
     '''Takes in the tgz file and desired unpacked filename and unpack it'''
     try:
-        with tarfile.open(filenameSource+'zizi') as tar:
+        with tarfile.open(filenameSource) as tar:
             tar.extractall()
             tar.close()
     except Exception as e:
