@@ -1,5 +1,5 @@
 import requests,zipfile,io,filecmp,logging,os,paramiko,json
-from ourFunctions import formatDate,tgzMyFile, sendEmail
+from ourFunctions import formatDate,tgzMyFile, sendEmail, unTgzMyFile
 from datetime import date, timedelta, datetime
 from ftplib import FTP
 
@@ -37,6 +37,23 @@ dayNumberMinus=today.day-1
 dateMinus=today.strftime('%Y'+str(dayNumberMinus)+'%m')
 tgzMyFile(finalDate,finalDate+'.sql')
 
+
+username=data['SFTP']['username']
+password=data['SFTP']['password']
+server=data['SFTP']['server']
+port=data['SFTP']['port'] #port SFTP
+transport = paramiko.Transport((server,port))
+# Auth
+transport.connect(None,username,password) # None est la Hostkey
+# Go!    
+sftp = paramiko.SFTPClient.from_transport(transport)
+
+remotePath=data['SFTP']['remotePath']
+localPath=data['SFTP']['localPath']
+#DL du jour précédent pour comparaison
+sftp.get(os.path.join(remotePath,dateMinus+".tgz"),os.path.join(localPath,dateMinus+".tgz"))
+unTgzMyFile(os.path.join(dateMinus+".tgz"))
+
 try:
     if filecmp.cmp(finalDate+'.sql',dateMinus+'.sql'): # si les fichiers sont identiques
         logging.error("Le fichier est le même que celui de la veille")
@@ -44,34 +61,8 @@ try:
         logging.info("Le fichier n'est pas le même que celui de la veille")
 except FileNotFoundError:
     logging.warning("Le fichier du jour précédent n'existe pas")
-
-username=data['SFTP']['username']
-password=data['SFTP']['password']
-server=data['SFTP']['server']
-
-'''with FTP(server) as ftp:
-    try:
-        ftp.login(username,password)
-        strdir='/ScriptingSystemS7'
-        ftp.cwd(strdir)
-        fileToTransfer=open(finalDate+'.tgz',"rb")
-        ftp.storbinary(f"STOR {finalDate+'.tgz'}",fileToTransfer,1024)
-        ftp.close()
-    except ftplib.error_perm as e:
-        logging.critical("FTP : "+str(e))
-        exit(3)
-        '''
-port=data['SFTP']['port'] #port SFTP
-transport = paramiko.Transport((server,port))
-
-# Auth
-transport.connect(None,username,password) # None est la Hostkey
-
-# Go!    
-sftp = paramiko.SFTPClient.from_transport(transport)
-
-remotePath=data['SFTP']['remotePath']
-localPath=data['SFTP']['localPath']
+except Exception as e:
+    logging.error(str(e))
 
 # Upload : remotepath en chemin absolu ou alors sftp.chdir(dossier) puis chemin relatif à ce dossier
 sftp.put(localpath=finalDate+".tgz",remotepath=os.path.join(remotePath,finalDate+".tgz"))
@@ -97,10 +88,13 @@ if transport: transport.close()
 senderEmail=data['SMTP']['senderEmail']
 senderPassword=data['SMTP']['password']
 
-sendEmail(senderEmail, senderPassword, True, data)
+#sendEmail(senderEmail, senderPassword, True, data)
 
 
 # à la fin du script on enlèvera le .sql du jour d'avant ainsi que l'archive tgz de celui du jour actuel car on en aura plus besoin
-
+filesToDelete=[dateMinus,finalDate]
+for i in filesToDelete:
+    os.remove(i+'.sql')
+    os.remove(i+'.tgz')
 
 logging.info("Script ended")
