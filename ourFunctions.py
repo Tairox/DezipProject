@@ -56,13 +56,15 @@ def sendEmail(smtp_server : str , port :int, sender_email : str, password : str,
     # Puts the email of the configuration file in the list recipients
     
     try:
-        i = 1
+        '''i = 1
         while i <= len(data['EMAILS']):
             email = 'email' + str(i)
             recipients.append(data['EMAILS'][email])
-            i += 1
+            i += 1'''
+        for x in data['EMAILS'].values():
+            recipients.append(x)
     except Exception:
-        logging.info("Unable to read the emails specified in the configuration file")
+        logging.error("Unable to read the emails specified in the configuration file")
     
     # Creation of the message (the email)
     msg = MIMEMultipart()
@@ -84,7 +86,4 @@ def sendEmail(smtp_server : str , port :int, sender_email : str, password : str,
             server.login(sender_email, password)
             server.send_message(msg, from_addr=sender_email, to_addrs=recipients)
     except Exception as e:
-        logging.info(e)
-
-
-    
+        logging.error(e)   
