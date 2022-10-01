@@ -1,21 +1,38 @@
+import string
+import requests, zipfile, io, tarfile, os, logging, smtplib, smtplib, ssl, filecmp, paramiko
 from re import I
-import tarfile,os,logging, smtplib, smtplib, ssl, json
 from os.path import basename
+from datetime import date, datetime, timedelta
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 
-def formatDate(daynumber : int, monthnumber : int, yearnumber : int) -> str :
-    '''Takes in the number of the day,month and year and returns it in a AAAADDMM format
-    REPLACED BY built-in function strftime() from datetime'''
-    if monthnumber<10 :
-        monthnumber="0"+str(monthnumber)
+def unzipURL(URL : string, filename : string, finalDate : date) -> None:
+    r = requests.get(URL, stream=True)
+    if r.ok:
+        logging.info("L'URL de téléchargement existe")
+        z = zipfile.ZipFile(io.BytesIO(r.content))
+        try:
+            z.extract(filename,".") # "filename" est le nom du fichier attendu dans le zip, il sera extrait dans le répertoire commun (.)
+            logging.info("L'archive ZIP contient bien le fichier attendu")
+            os.rename(filename,finalDate+'.sql')
+        except KeyError:
+            logging.critical("L'archive ZIP ne contient pas le fichier attendu")
+            exit(1) # arrête le programme
+        except FileExistsError :
+            os.remove(finalDate+'.sql')
+            os.rename(filename,finalDate+'.sql')
+    else:
+        logging.critical("L'URL de téléchargement n'existe pas")
+        exit()
 
-    if daynumber<10 :
-        daynumber="0"+str(daynumber)
-
-    final_date=str(yearnumber)+str(daynumber)+str(monthnumber)
-    return final_date
+def formatDates() -> str :
+    '''Returns AAAADDMM date foramt of today and yesterday'''
+    today=date.today()
+    finalDate=today.strftime("%Y%d%m")
+    dateMinus=today-timedelta(days=1)
+    dateMinus=dateMinus.strftime("%Y%d%m")
+    return finalDate,dateMinus
 
 def tgzMyFile(filenameOfTgz : str,filenameOfSource : str) -> None :
     '''Takes in the desired name of your .tgz file (without extension) and the filename (or path) of your source file, creates the archive in your current directory'''
@@ -35,6 +52,47 @@ def unTgzMyFile(filenameSource : str) -> None :
     except Exception as e:
         logging.error(str(e))
 
+def sftpCheckAndUpload(username : string,password : string, server : string, port : int, remotePath : string, localPath : string, finalDate : date, dateMinus : date, daysToDelete : int) -> None:
+    transport = paramiko.Transport((server,port))
+    # Auth
+    transport.connect(None,username,password) # None est la Hostkey
+    # Go!    
+    sftp = paramiko.SFTPClient.from_transport(transport)
+
+
+    try:
+        #DL du jour précédent pour comparaison
+        sftp.get(os.path.join(remotePath,dateMinus+".tgz"),os.path.join(localPath,dateMinus+".tgz"))
+        unTgzMyFile(os.path.join(dateMinus+".tgz"))
+        if filecmp.cmp(finalDate+'.sql',dateMinus+'.sql'): # si les fichiers sont identiques
+            logging.error("Le fichier est le même que celui de la veille")
+        else:
+            logging.info("Le fichier n'est pas le même que celui de la veille")
+    except FileNotFoundError:
+        logging.warning("Le fichier du jour précédent n'existe pas")
+    except Exception as e:
+        logging.error(str(e))
+
+    # Upload : remotepath en chemin absolu ou alors sftp.chdir(dossier) puis chemin relatif à ce dossier
+    sftp.put(localpath=finalDate+".tgz",remotepath=os.path.join(remotePath,finalDate+".tgz"))
+    #utilisation de os.path.join permet de gérer le cas où remotePath finut par / et le cas où il ne finit pas par /
+
+    ##SUPPRIME TOUT LES FICHIERS QUI ONT PLUS DE X JOURS
+    for entry in sftp.listdir_attr(remotePath):
+        timestamp = entry.st_mtime # timestamp devient le temps de dernière modif du fichier
+        createtime = datetime.fromtimestamp(timestamp)
+        now = datetime.now()
+        delta = now - createtime
+        if delta.days > daysToDelete:
+            filepath = remotePath + '/' + entry.filename
+            sftp.get(filepath, os.path.join(localPath, entry.filename))  #os.path.join permet de mettre un / à la fin de local path s'il n'y en a pas
+            sftp.remove(filepath)
+            logging.info("Le fichier "+entry.filename+" a été supprimé (fichier trop ancien).")
+    logging.info("La recherche de fichiers obsolètes est terminée (+ de "+str(daysToDelete)+" jours).")
+
+    # Close
+    if sftp: sftp.close()
+    if transport: transport.close()
 
 def sendEmail(smtp_server : str , port :int, sender_email : str, password : str, issavegood : bool, data) -> None :
     '''Send an email to email adresses specified in the configuration file.'''
@@ -86,4 +144,15 @@ def sendEmail(smtp_server : str , port :int, sender_email : str, password : str,
             server.login(sender_email, password)
             server.send_message(msg, from_addr=sender_email, to_addrs=recipients)
     except Exception as e:
-        logging.error(e)   
+        logging.error(e)
+
+def deleteLocalFiles(filesToDelete : list[str]) -> None:
+    for i in filesToDelete:
+        SQLfilename=i+'.sql'
+        TGZfilename=i+'.tgz'
+        if(os.path.exists(SQLfilename)):
+            os.remove(SQLfilename)
+        if(os.path.exists(TGZfilename)):
+            os.remove(TGZfilename)
+            
+    logging.info("Les fichiers locaux ont été supprimés.")
