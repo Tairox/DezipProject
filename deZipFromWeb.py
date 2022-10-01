@@ -33,8 +33,9 @@ else:
     logging.critical("L'URL de téléchargement n'existe pas")
     exit()
 
-dayNumberMinus=today.day-1
-dateMinus=today.strftime('%Y'+str(dayNumberMinus)+'%m')
+
+dateMinus=today-timedelta(days=1)
+dateMinus=dateMinus.strftime("%Y%d%m")
 tgzMyFile(finalDate,finalDate+'.sql')
 
 
@@ -50,11 +51,12 @@ sftp = paramiko.SFTPClient.from_transport(transport)
 
 remotePath=data['SFTP']['remotePath']
 localPath=data['SFTP']['localPath']
-#DL du jour précédent pour comparaison
-sftp.get(os.path.join(remotePath,dateMinus+".tgz"),os.path.join(localPath,dateMinus+".tgz"))
-unTgzMyFile(os.path.join(dateMinus+".tgz"))
+
 
 try:
+    #DL du jour précédent pour comparaison
+    sftp.get(os.path.join(remotePath,dateMinus+".tgz"),os.path.join(localPath,dateMinus+".tgz"))
+    unTgzMyFile(os.path.join(dateMinus+".tgz"))
     if filecmp.cmp(finalDate+'.sql',dateMinus+'.sql'): # si les fichiers sont identiques
         logging.error("Le fichier est le même que celui de la veille")
     else:
@@ -96,7 +98,12 @@ senderPassword=data['SMTP']['password']
 # à la fin du script on enlèvera le .sql du jour d'avant ainsi que l'archive tgz de celui du jour actuel car on en aura plus besoin
 filesToDelete=[dateMinus,finalDate]
 for i in filesToDelete:
-    os.remove(i+'.sql')
-    os.remove(i+'.tgz')
+    SQLfilename=i+'.sql'
+    TGZfilename=i+'.tgz'
+    if(os.path.exists(SQLfilename)):
+        os.remove(SQLfilename)
+    if(os.path.exists(TGZfilename)):
+        os.remove(TGZfilename)
+
 logging.info("Les fichiers locaux ont été supprimés.")
 logging.info("Script ended")
