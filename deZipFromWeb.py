@@ -89,10 +89,12 @@ if sftp: sftp.close()
 if transport: transport.close()
 
 # Sending emails :
+server=data['SMTP']['server']
+port=data['SMTP']['port']
 senderEmail=data['SMTP']['senderEmail']
 senderPassword=data['SMTP']['password']
 
-#sendEmail(senderEmail, senderPassword, True, data)
+sendEmail(server, port, senderEmail, senderPassword, True, data)
 
 
 # à la fin du script on enlèvera le .sql du jour d'avant ainsi que l'archive tgz de celui du jour actuel car on en aura plus besoin
