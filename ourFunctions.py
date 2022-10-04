@@ -17,6 +17,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 
 
+def change_shell_path_to_script_folder() -> None:
+    scriptdir =  os.path.dirname(os.path.abspath(__file__))
+    os.chdir(scriptdir)
+
 def unzipURL(URL: string, filename: string, finalDate: date) -> None:
     r = requests.get(URL, stream=True)
     if r.ok:

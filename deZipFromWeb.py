@@ -1,6 +1,10 @@
+#!/usr/bin/python
+
 import logging
 import json
-from ourFunctions import deleteLocalFiles, formatDates, sftpCheckAndUpload, tgzMyFile, sendEmail, unzipURL
+from ourFunctions import deleteLocalFiles, formatDates, sftpCheckAndUpload, tgzMyFile, sendEmail, unzipURL, change_shell_path_to_script_folder
+
+change_shell_path_to_script_folder()
 
 logging.basicConfig(filename='scriptStatus.log', format='%(asctime)s:%(levelname)s:%(message)s',
                     encoding='utf-8', datefmt='%m/%d/%Y %H:%M:%S', level=logging.INFO)
