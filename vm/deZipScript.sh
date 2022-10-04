@@ -6,6 +6,7 @@ apt-get update
 apt-get install git -y
 apt-get install python3 -y
 apt-get install python3-pip -y 
+pip install paramiko
 apt-get install cron -y
 git clone https://github.com/Tairox/DezipProject ~/ScriptingSystem
 
