@@ -1,6 +1,6 @@
 # Utilitaire d'archivage 2022.
 
-_Projet de scripting système réalisé par Anthony Desousa, Arthur Rigaudière et Mattéo FIRRONE._
+_Projet de scripting système réalisé par Anthony De Sousa, Arthur Rigaudière et Mattéo FIRRONE._
 
 ## Rôle
 
@@ -8,7 +8,7 @@ Le script permet de récupérer une archive sur serveur web https, d'extraire le
 Ce script possède diverses fonctionnalités comme :
 
 - Un suivit des sauvegardes par envoi d'emails.
-- Une journalisation des étapes effectuées pendant la sauvegarde dans un fichier d'extension **'.log'**.
+- Une journalisation des étapes effectuées pendant la sauvegarde dans un fichier d'extension **`.log**.
 
 ## Doc utilisateur
 
