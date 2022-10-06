@@ -13,7 +13,23 @@ Ce script possède diverses fonctionnalités comme :
 
 ### Installation
 
-Installation avec le script ARTHUR.
+
+Le script bash **deZipScript.sh** va permettre à l’utilisateur d’installer tout ce qui est utile pour le bon fonctionnement du programme.
+Il faut lancer ce script en super utilisateur. Ensuite, il va :
+
+* vérifier les dernières mises à jour sur l’environnement de travail
+* installer le programme git
+* installer le programme python
+* installer le gestionnaire de package pip
+* installer la librairie paramiko sur python
+* installer le programme cron
+
+Toutes ces installations automatiques vont permettre à l’utilisateur de gagner du temps et de ne pas avoir de problème au moment de l’exécution.<br/>
+Ensuite, nous avons mis notre projet github en public pour que le script le récupère avec la commande git clone. Le projet est enregistré dans une dossier qui s’appelant Scripting System qui sera créé dans **~/** (ce qui signifie /home/user/).<br/>
+
+Maintenant que le programme est téléchargé, il faut planifier le lancement automatique grâce au cron. Le script va écrire dans le fichier cron de sorte à ce que le programme Python se lance chaque jour à 8h00.<br/>
+La seule partie manuelle à réaliser par l’utilisateur est de déposer son fichier de configuration dans le dossier **ScripingSystem**. Nous n’avons pas choisi de mettre le fichier de configuration avec le code en public sur github car ce n’est pas du tout sécurisé.<br/>
+Ensuite, le code s’exécutera automatiquement chaque jour pour récupérer le fichier sur le serveur.<br/>
 
 ### Configuration
 
