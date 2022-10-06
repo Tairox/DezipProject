@@ -40,7 +40,7 @@ senderPassword = data['SMTP']['password']
 
 sendEmail(server, port, senderEmail, senderPassword, True, data)
 
-# Delete the archive and the sql file
+# Locally delete the archives and the SQL files of yesterday and today
 filesToDelete = [dateMinus, finalDate]
 deleteLocalFiles(filesToDelete)
 

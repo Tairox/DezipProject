@@ -98,7 +98,7 @@ def sftpCheckAndUpload(username: string, password: string, server: string, port:
              remotepath=os.path.join(remotePath, finalDate+".tgz"))
     # use of os.path.join allows to manage the case where remotePath ends with / and the case where it does not end with /
 
-    # Delete all files that are older that X days
+    # Delete all files that are older than X days
     for entry in sftp.listdir_attr(remotePath):
         timestamp = entry.st_mtime  # timestamp becomes the time of last modification of the file
         createtime = datetime.fromtimestamp(timestamp)
