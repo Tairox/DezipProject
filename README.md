@@ -1,4 +1,4 @@
-# Utilitaire d'archivage 2022.
+# Utilitaire d'archivage 2022
 
 _Projet de scripting système réalisé par Anthony De Sousa, Arthur Rigaudière et Mattéo FIRRONE._
 
