@@ -24,22 +24,22 @@ def change_shell_path_to_script_folder() -> None:
 def unzipURL(URL: string, filename: string, finalDate: date) -> None:
     r = requests.get(URL, stream=True)
     if r.ok:
-        logging.info("L'URL de téléchargement existe")
+        logging.info("The download URL exists")
         z = zipfile.ZipFile(io.BytesIO(r.content))
         try:
-            # "filename" est le nom du fichier attendu dans le zip, il sera extrait dans le répertoire commun (.)
+            # "filename" is the name of the file expected in the zip, it will be extracted in the common directory (.)
             z.extract(filename, ".")
-            logging.info("L'archive ZIP contient bien le fichier attendu")
+            logging.info("The ZIP archive contains the expected file")
             os.rename(filename, finalDate+'.sql')
         except KeyError:
             logging.critical(
-                "L'archive ZIP ne contient pas le fichier attendu")
-            exit(1)  # arrête le programme
+                "The ZIP archive does not contain the expected file")
+            exit(1)  # stops program
         except FileExistsError:
             os.remove(finalDate+'.sql')
             os.rename(filename, finalDate+'.sql')
     else:
-        logging.critical("L'URL de téléchargement n'existe pas")
+        logging.critical("The download URL does not exist")
         exit()
 
 
@@ -57,9 +57,9 @@ def tgzMyFile(filenameOfTgz: str, filenameOfSource: str) -> None:
     with tarfile.open(filenameOfTgz+".tgz", "w:gz") as tar:
         tar.add(os.path.basename(filenameOfSource))
     if os.path.exists(filenameOfTgz+".tgz"):
-        logging.info("L'archive .tgz avec le bon nom a bien été créé")
+        logging.info("The .tgz archive with the correct name has been created")
     else:
-        logging.critical("L'archive .tgz n'a pas pu être créé")
+        logging.critical("The .tgz archive could not be created")
 
 
 def unTgzMyFile(filenameSource: str) -> None:
@@ -75,44 +75,44 @@ def unTgzMyFile(filenameSource: str) -> None:
 def sftpCheckAndUpload(username: string, password: string, server: string, port: int, remotePath: string, localPath: string, finalDate: date, dateMinus: date, daysToDelete: int) -> None:
     transport = paramiko.Transport((server, port))
     # Auth
-    transport.connect(None, username, password)  # None est la Hostkey
+    transport.connect(None, username, password)  # None is the Hostkey
     # Go!
     sftp = paramiko.SFTPClient.from_transport(transport)
 
     try:
-        # DL du jour précédent pour comparaison
+        # Previous day's DL for comparison
         sftp.get(os.path.join(remotePath, dateMinus+".tgz"),
                  os.path.join(localPath, dateMinus+".tgz"))
         unTgzMyFile(os.path.join(dateMinus+".tgz"))
-        if filecmp.cmp(finalDate+'.sql', dateMinus+'.sql'):  # si les fichiers sont identiques
-            logging.error("Le fichier est le même que celui de la veille")
+        if filecmp.cmp(finalDate+'.sql', dateMinus+'.sql'):  # if both files are the same
+            logging.error("The file is the same as the one from yesterday")
         else:
-            logging.info("Le fichier n'est pas le même que celui de la veille")
+            logging.info("The file is not the same as the one from yesterday")
     except FileNotFoundError:
-        logging.warning("Le fichier du jour précédent n'existe pas")
+        logging.warning("The previous day's file does not exist")
     except Exception as e:
         logging.error(str(e))
 
-    # Upload : remotepath en chemin absolu ou alors sftp.chdir(dossier) puis chemin relatif à ce dossier
+    # Upload : remotepath as absolute path or sftp.chdir(folder) then relative path to this folder
     sftp.put(localpath=finalDate+".tgz",
              remotepath=os.path.join(remotePath, finalDate+".tgz"))
-    # utilisation de os.path.join permet de gérer le cas où remotePath finut par / et le cas où il ne finit pas par /
+    # use of os.path.join allows to manage the case where remotePath ends with / and the case where it does not end with /
 
-    # SUPPRIME TOUT LES FICHIERS QUI ONT PLUS DE X JOURS
+    # Delete all files that are older that X days
     for entry in sftp.listdir_attr(remotePath):
-        timestamp = entry.st_mtime  # timestamp devient le temps de dernière modif du fichier
+        timestamp = entry.st_mtime  # timestamp becomes the time of last modification of the file
         createtime = datetime.fromtimestamp(timestamp)
         now = datetime.now()
         delta = now - createtime
         if delta.days > daysToDelete:
             filepath = remotePath + '/' + entry.filename
-            # os.path.join permet de mettre un / à la fin de local path s'il n'y en a pas
+            # os.path.join allows to put a / at the end of local path if there is none
             sftp.get(filepath, os.path.join(localPath, entry.filename))
             sftp.remove(filepath)
-            logging.info("Le fichier "+entry.filename +
-                         " a été supprimé (fichier trop ancien).")
+            logging.info("The file "+entry.filename +
+                         " has been deleted (file too old).")
     logging.info(
-        "La recherche de fichiers obsolètes est terminée (+ de "+str(daysToDelete)+" jours).")
+        "The search for obsolete files is over (+ than "+str(daysToDelete)+" days).")
 
     # Close
     if sftp:
@@ -186,4 +186,4 @@ def deleteLocalFiles(filesToDelete: list[str]) -> None:
         if (os.path.exists(TGZfilename)):
             os.remove(TGZfilename)
 
-    logging.info("Les fichiers locaux ont été supprimés.")
+    logging.info("Local files have been deleted.")

@@ -40,7 +40,7 @@ senderPassword = data['SMTP']['password']
 
 sendEmail(server, port, senderEmail, senderPassword, True, data)
 
-# à la fin du script on enlèvera le .sql du jour d'avant ainsi que l'archive tgz de celui du jour actuel car on en aura plus besoin
+# Delete the archive and the sql file
 filesToDelete = [dateMinus, finalDate]
 deleteLocalFiles(filesToDelete)
 
