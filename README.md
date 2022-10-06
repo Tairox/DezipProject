@@ -52,6 +52,6 @@ Le script d'installation configure par défaut l'automatisation de lancement du 
 Si l'utilisateur souhaite configurer lui même l'automatisation de lancement du script. Il suffit d'ajouter la ligne suivante dans la crontable du root : <br/>
 > 0 8 * * * python3 /chemin-absolue-vers-le-script/deZipFromWeb.py
 
-Pour une utilisation manuelle, il suffit d'exécuter le script :
+Pour une utilisation manuelle, il suffit d'exécuter le script (script dans le répertoire courant)
 > python3 ./deZipFromWeb.py
 
