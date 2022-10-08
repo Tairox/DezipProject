@@ -4,10 +4,11 @@ _Projet de scripting système réalisé par Anthony De Sousa, Arthur Rigaudière
 
 ## Rôle
 
-Le script permet de récupérer une archive sur serveur web https, d'extraire le fichier qu'il contient puis de l'archiver sur un serveur SFTP distant avec une durée de conservation paramétrable.<br/>
+Le script permet de récupérer une archive sur serveur web https, d'extraire le fichier qu'il contient puis de l'archiver sur un serveur SFTP distant avec une durée de conservation paramétrable.
+<br/>
 Ce script possède diverses fonctionnalités comme :
 
-- Un suivit des sauvegardes par envoi d'emails.
+- Un suivi des sauvegardes par envoi d'emails
 - Une journalisation des étapes effectuées pendant la sauvegarde dans un fichier d'extension **`.log`**.
 
 ## Doc utilisateur
@@ -26,10 +27,10 @@ Il faut lancer ce script en tant que root. Ensuite, il va :
 - Cloner le dépôt GitHub dans le répertoire `~`
 - Installer CRON et planifier l'exécution du script tous les jours à 8H
 
-Ce script fonctionne bien évidemment que sur Linux, pour les utilisateurs Windows il s'agira de réaliser l'installation des dépendances manuellement :
+Ce script ne fonctionne bien évidemment que sur Linux, pour les utilisateurs Windows il s'agira de réaliser l'installation des dépendances manuellement :
 
 - Installer Python puis la librairie **_paramiko_**.
-- Télécharger les scripts python et le fichier de configuration présent dans le repository.
+- Télécharger les scripts Python et le fichier de configuration présent dans le repository.
 
 Pour finir, l'utilisateur doit ajouter l'ensemble des informations nécessaires dans le fichier de configuration. Pour cela, se référer à la section **exploitation**.
 
