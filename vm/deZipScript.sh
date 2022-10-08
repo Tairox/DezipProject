@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Lancement du script"
+echo "Launching the script"
 
 apt-get update  
 apt-get install git -y
@@ -10,12 +10,13 @@ pip install paramiko
 apt-get install cron -y
 git clone https://github.com/Tairox/DezipProject ~/ScriptingSystem
 
-#write out current crontab
+# Copy the content of current crontab file to another temporary file mycron
 crontab -l > mycron
-#echo new cron into cron file
-echo "* * * * * python3 ~/ScriptingSystem/deZipFromWeb.py" >> mycron
-#install new cron file
+# Add new cronjob to the temporary file
+echo "0 8 * * * python3 ~/ScriptingSystem/deZipFromWeb.py" >> mycron
+# We copy the temporary file back to crontab
 crontab mycron
 
-echo "Fin du script"
+echo "End of the script"
+# Deletion of the temporary file
 rm mycron

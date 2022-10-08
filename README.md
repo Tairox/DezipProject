@@ -14,7 +14,7 @@ Ce script possède diverses fonctionnalités comme :
 
 ### Installation
 
-Le script bash `deZipScript.sh permet à l’utilisateur d’installer le script et les dépendances pour le bon fonctionnement du programme.
+Le script bash `deZipScript.sh` permet à l’utilisateur d’installer le script et les dépendances pour le bon fonctionnement du programme.
 Il faut lancer ce script en super utilisateur. Ensuite, il va :
 
 - Vérifier les derniers paquets disponibles et les installer sur la machine.
@@ -22,16 +22,16 @@ Il faut lancer ce script en super utilisateur. Ensuite, il va :
   - **_git_**
   - **_python_**
   - **_pip_**
-- Installer la librairie paramiko sur python (pour l'envoi SMTP)
-- Cloner le dépot GitHub dans le répertoire `~`
-- Installer CRON et planifier l'exécution du script tous les jours à 8H
+- Installer la librairie paramiko sur python (pour l'envoi SMTP).
+- Cloner le dépôt GitHub dans le répertoire `~`.
+- Installer CRON et planifier l'exécution du script tous les jours à 8H.
 
-Ce script fonctionne bien évidemment que sur linux, pour les utilisateurs windows il sagira de réaliser l'installation des dépendances manuellement :
+Ce script fonctionne bien évidemment que sur Linux, pour les utilisateurs Windows il s'agira de réaliser l'installation des dépendances manuellement :
 
-- Installer Python puis la librairie **_paramiko_**
-- Télécharger les scripts python et le fichier de configuration présent dans le repository
+- Installer Python puis la librairie **_paramiko_**.
+- Télécharger les scripts python et le fichier de configuration présent dans le repository.
 
-Pour finir, l'utilisateur doit ajouter l'ensemble des informations nécéssaires dans le fichier de configuration. Pour cela, se référer à la section **exploitation**.
+Pour finir, l'utilisateur doit ajouter l'ensemble des informations nécessaires dans le fichier de configuration. Pour cela, se référer à la section **exploitation**.
 
 ### Configuration
 
@@ -39,19 +39,19 @@ Le fichier de configuration `databaseconfig.json` contient un ensemble de champs
 
 - L'objet **`FileRequest`** permet de spécifier l'URL sur laquelle se trouve l'archive à travers l'attribut _URLtoRequest_, il permet de plus de définir le nom du fichier à extraire dans cette archive avec _filename_.
 - L'objet **`SFTP`** permet de configurer la connexion au serveur SFTP distant avec :
-  - Le nom d'utilisateur : _username_
-  - Le mot de passe : _password_
-  - L'adresse du serveur et son port: _server_, _port_
-  - Chemin d'accès : **ANTHONY ICI**
-  - La durée de conservation des fichiers sur le serveur distant : _daysOfPersistence_
-- L'objet **`SMTP`** permet de configurer l'adresse du serveur SMTP, son port ainsi que les identifiants de connexion : _server_, _port_, _senderEmail_ , _password_
-- L'objet **`EMAILS`** permet d'ajouter les adresses mails qui recevront les emails à chaque sauvegarde. Le format de la chaîne de caractère est libre et il n'y a pas de limite d'emails à ajouter
+  - Le nom d'utilisateur : _username_.
+  - Le mot de passe : _password_.
+  - L'adresse du serveur et son port: _server_, _port_.
+  - Le chemin d'accès local et distant : _localPath_, _remotepath_.
+  - La durée de conservation des fichiers sur le serveur distant : _daysOfPersistence_.
+- L'objet **`SMTP`** permet de configurer l'adresse du serveur SMTP, son port ainsi que les identifiants de connexion : _server_, _port_, _senderEmail_ , _password_.
+- L'objet **`EMAILS`** permet d'ajouter les adresses mails qui recevront les emails à chaque sauvegarde. Le format de la chaîne de caractères est libre et il n'y a pas de limite d'emails à ajouter.
 
 ### Exploitation
 
 Le script d'installation configure par défaut l'automatisation de lancement du script avec CRON. Par défaut le script est exécuté tous les jours à 8H.
 
-Si l'utilisateur souhaite configurer lui même l'automatisation de lancement du script. Il suffit d'ajouter la ligne suivante dans la crontable du root : <br/>
+Si l'utilisateur souhaite configurer lui-même l'automatisation de lancement du script. Il suffit d'ajouter la ligne suivante dans la crontable du root : <br/>
 
 `0 8 \* \* \* python3 /chemin-absolue-vers-le-script/deZipFromWeb.py`
 
