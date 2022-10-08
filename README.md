@@ -15,7 +15,7 @@ Ce script possède diverses fonctionnalités comme :
 ### Installation
 
 Le script bash `deZipScript.sh` permet à l’utilisateur d’installer le script et les dépendances pour le bon fonctionnement du programme.
-Il faut lancer ce script en super utilisateur. Ensuite, il va :
+Il faut lancer ce script en tant que root. Ensuite, il va :
 
 - Vérifier les derniers paquets disponibles et les installer sur la machine.
 - Installer les dernières versions de :
