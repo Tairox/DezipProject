@@ -49,11 +49,11 @@ Le fichier de configuration `databaseconfig.json` contient un ensemble de champs
 
 ### Exploitation
 
-Le script d'installation configure par défaut l'automatisation de lancement du script avec CRON. Par défaut le script est exécuté tous les jours à 8H.
+Le script d'installation configure par défaut l'automatisation de lancement du script avec CRON. Par défaut le script est exécuté tous les jours à 8h.
 
 Si l'utilisateur souhaite configurer lui-même l'automatisation de lancement du script. Il suffit d'ajouter la ligne suivante dans la crontable du root : <br/>
 
-`0 8 \* \* \* python3 /chemin-absolue-vers-le-script/deZipFromWeb.py`
+`0 8 \* \* \* python3 <chemin absolu>/deZipFromWeb.py`
 
 Pour une utilisation manuelle, il suffit d'exécuter le script (script dans le répertoire courant)
 
