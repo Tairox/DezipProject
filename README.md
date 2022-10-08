@@ -22,9 +22,9 @@ Il faut lancer ce script en tant que root. Ensuite, il va :
   - **_git_**
   - **_python_**
   - **_pip_**
-- Installer la librairie paramiko sur python (pour l'envoi SMTP).
-- Cloner le dépôt GitHub dans le répertoire `~`.
-- Installer CRON et planifier l'exécution du script tous les jours à 8H.
+- Installer la librairie paramiko sur python (pour l'envoi SMTP)
+- Cloner le dépôt GitHub dans le répertoire `~`
+- Installer CRON et planifier l'exécution du script tous les jours à 8H
 
 Ce script fonctionne bien évidemment que sur Linux, pour les utilisateurs Windows il s'agira de réaliser l'installation des dépendances manuellement :
 
@@ -39,13 +39,13 @@ Le fichier de configuration `databaseconfig.json` contient un ensemble de champs
 
 - L'objet **`FileRequest`** permet de spécifier l'URL sur laquelle se trouve l'archive à travers l'attribut _URLtoRequest_, il permet de plus de définir le nom du fichier à extraire dans cette archive avec _filename_.
 - L'objet **`SFTP`** permet de configurer la connexion au serveur SFTP distant avec :
-  - Le nom d'utilisateur : _username_.
-  - Le mot de passe : _password_.
-  - L'adresse du serveur et son port: _server_, _port_.
-  - Le chemin d'accès local et distant : _localPath_, _remotepath_.
-  - La durée de conservation des fichiers sur le serveur distant : _daysOfPersistence_.
-- L'objet **`SMTP`** permet de configurer l'adresse du serveur SMTP, son port ainsi que les identifiants de connexion : _server_, _port_, _senderEmail_ , _password_.
-- L'objet **`EMAILS`** permet d'ajouter les adresses mails qui recevront les emails à chaque sauvegarde. Le format de la chaîne de caractères est libre et il n'y a pas de limite d'emails à ajouter.
+  - Le nom d'utilisateur : _username_
+  - Le mot de passe : _password_
+  - L'adresse du serveur et son port: _server_, _port_
+  - Le chemin d'accès local et distant : _localPath_, _remotepath_
+  - La durée de conservation des fichiers sur le serveur distant : _daysOfPersistence_
+- L'objet **`SMTP`** permet de configurer l'adresse du serveur SMTP, son port ainsi que les identifiants de connexion : _server_, _port_, _senderEmail_ , _password_
+- L'objet **`EMAILS`** permet d'ajouter les adresses mails qui recevront les emails à chaque sauvegarde. Le format de la chaîne de caractères est libre et il n'y a pas de limite d'emails à ajouter
 
 ### Exploitation
 
