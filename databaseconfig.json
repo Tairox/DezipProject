@@ -1,0 +1,34 @@
+{
+    "FileRequest" :
+    {
+        "filename":"name of the file in the archive",
+        "URLtoRequest":"adress of the archive"
+    },
+    
+    "SFTP" :
+    {
+        "username":"your username",
+        "password":"your password",
+        "server":"server IP address",
+        "port": integer,
+        "remotePath":"remote path of the file in the server",
+        "localPath":".",
+        "daysOfPersistence": integer
+    },
+
+    "SMTP" :
+    {
+        "server": "server IP address",
+        "port": integer,
+        "senderEmail": "your mail address",
+        "password": "your password"
+    },
+
+    "EMAILS" :
+    {
+        "email1":"1st email",
+        "email2":"2nd email",
+        "email3":"3d email",
+        "mail :D)":"another email"
+    }
+}
