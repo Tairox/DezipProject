@@ -1,8 +1,8 @@
 {
     "FileRequest" :
     {
-        "filename":"name of the file in the archive",
-        "URLtoRequest":"adress of the archive"
+        "filename":"Name of the file contained in the archive",
+        "URLtoRequest":"URL of the ZIP archive"
     },
     
     "SFTP" :
@@ -11,7 +11,7 @@
         "password":"your password",
         "server":"server IP address",
         "port": integer,
-        "remotePath":"remote path of the file in the server",
+        "remotePath":"remote path of the folder in the server",
         "localPath":".",
         "daysOfPersistence": integer
     },
@@ -28,7 +28,6 @@
     {
         "email1":"1st email",
         "email2":"2nd email",
-        "email3":"3d email",
-        "mail :D)":"another email"
+        "mailinglist3": "Feel free to add more"
     }
 }
